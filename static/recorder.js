@@ -7,8 +7,10 @@ const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const status = document.getElementById('status');
 const output = document.getElementById('output');
+const getTranscriptBtn = document.getElementById('getTranscriptBtn');
 
 startBtn.onclick = async () => {
+    output.textContent = ""
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
     audioChunks = [];
@@ -37,11 +39,11 @@ startBtn.onclick = async () => {
             await sendAudioChunks(audioChunks);
             audioChunks = [];
         }
-        status.textContent = "Recording stopped.";
+        status.textContent = "Progress Status :: Recording stopped.";
     };
 
     mediaRecorder.start(500); // Collect data every 500ms (adjust as needed)
-    status.textContent = "Recording...";
+    status.textContent = "Progress Status :: Recording...";
     startBtn.disabled = true;
     stopBtn.disabled = false;
 };
@@ -55,7 +57,7 @@ stopBtn.onclick = () => {
 };
 
 async function sendAudioChunks(chunks) {
-    status.textContent = "Uploading...";
+    status.textContent = "Progress Status :: Started Listening...";
     const blob = new Blob(chunks, { type: 'audio/webm' }); // or 'audio/wav' depending on your backend
     const formData = new FormData();
     formData.append('file', blob, 'audio.webm');
@@ -66,10 +68,28 @@ async function sendAudioChunks(chunks) {
             body: formData
         });
         const data = await response.json();
-        output.textContent += data.soap_note + "\n";
-        status.textContent = "Recording...";
+        output.textContent = "Transcripts: "
+        output.textContent += data.transcript + "\n\n";
+        status.textContent = "Progress Status :: Listening...";
     } catch (err) {
-        status.textContent = "Upload failed!";
+        status.textContent = "Progress Status :: Transcription error!";
         console.error(err);
     }
 }
+
+getTranscriptBtn.onclick = async () => {
+    status.textContent = "Progress Status :: Fetching Notes...";
+    try {
+        const response = await fetch('/notes/');
+        const data = await response.json();
+        if (data.notes) {
+            output.textContent += "SOAP Notes: " + data.notes + "\n";
+        } else {
+            output.textContent += "Error Generating Notes. Please retry.\n";
+        }
+        status.textContent = "Progress Status :: Generated Notes";
+    } catch (err) {
+        status.textContent = "Progress Status :: Failed to fetch SOAP Notes!";
+        console.error(err);
+    }
+};
