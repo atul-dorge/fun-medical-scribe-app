@@ -1,21 +1,58 @@
 # fun-medical-scribe-app
 A medical scribe app which understands patient-healthcare provider conversations and generates SOAP notes
 
+## 📐 Architecture Overview
 
-fun-medical-scribe-app/
-├── app/
-│ ├── api.py
-│ ├── services/
-│ │ └── transcription.py
-│ ├── prompts.py
-│ └── ... (other backend files)
-├── static/
-│ └── recorder.js
-├── audio_uploads/ # Where audio files are stored
-├── transcripts.txt # Where transcripts are stored
-├── .env # Environment variables (not committed)
-├── requirements.txt
-└── README.md
+### 🖼️ Frontend
+**Files:** `static/recorder.js`, HTML  
+- Provides a web UI to:
+  - Record audio  
+  - Upload audio to the backend  
+  - Display transcripts and SOAP notes  
+- Sends audio data via HTTP requests  
+- Fetches and renders transcripts and SOAP notes
+
+---
+
+### ⚙️ Backend (FastAPI in `app/`)
+
+#### 🔹 API Layer (`app/api.py`)
+- Exposes endpoints to:
+  - Upload audio  
+  - Retrieve transcripts  
+  - Generate SOAP notes  
+- Handles file-based storage (no database)
+
+#### 🔹 Transcription Service (`app/services/transcription.py`)
+- Uses **Deepgram API** to:
+  - Transcribe audio  
+  - Perform speaker diarization  
+- Returns structured transcript data
+
+#### 🔹 LLM Service (`app/services/llm.py`)
+- Sends transcripts to **OpenAI API**  
+- Generates SOAP notes using prompt templates
+
+#### 🔹 Prompts (`app/prompts.py`)
+- Stores and manages prompt templates used by the LLM service
+
+---
+
+## 💾 Storage
+
+- **Audio Files:**  
+  - Stored in `audio_uploads/` with UUID filenames  
+- **Transcripts:**  
+  - Appended line-by-line in `transcripts.txt`
+
+---
+
+## 🔐 Configuration
+
+- API keys and secrets are managed via environment variables  
+- Loaded automatically from a `.env` file
+
+---
 
 
 ## Setup Instructions
@@ -92,3 +129,4 @@ Run uvicorn main:app --reload
 ## Security
 
 **Never commit your `.env` file or API keys to version control.**  
+
