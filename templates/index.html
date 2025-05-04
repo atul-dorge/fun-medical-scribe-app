@@ -1,15 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Medical Scribe</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fun AI Medical Scriber</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2721/2721269.png" />
 </head>
-<body>
-    <h1>AI Medical Scribe</h1>
-    <button id="startBtn">Start Recording</button>
-    <button id="stopBtn" disabled>Stop Recording</button>
-    <button id="getTranscriptBtn">Get Transcript</button>
-    <p id="status"></p>
-    <pre id="output"></pre>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <div class="max-w-2xl mx-auto mt-20 p-8 bg-white shadow-2xl rounded-2xl">
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">
+            🩺 Fun AI Medical Scriber
+        </h1>
+
+        <div class="flex justify-center gap-4 mb-6">
+            <button id="startBtn"
+                class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow">
+                🎙️ Start Recording
+            </button>
+            <button id="stopBtn"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded shadow"
+                disabled>
+                ⏹️ Stop
+            </button>
+            <button id="getTranscriptBtn"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow">
+                📄 Get SOAP Notes
+            </button>
+        </div>
+
+        <p id="status" class="text-center text-sm text-gray-500 mb-4">Idle</p>
+
+        <div class="bg-gray-100 p-4 rounded-lg max-h-96 overflow-y-auto">
+            <pre id="output" class="whitespace-pre-wrap text-gray-700"></pre>
+        </div>
+    </div>
 
     <script src="/static/recorder.js"></script>
 </body>

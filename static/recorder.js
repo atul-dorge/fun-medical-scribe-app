@@ -1,7 +1,7 @@
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
-const CHUNK_SIZE_THRESHOLD = 0.5 * 1024; // 1 MB, adjust as needed
+const CHUNK_SIZE_THRESHOLD = 5 *1024* 1024; // 5 MB, adjust as needed
 
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
@@ -39,11 +39,10 @@ startBtn.onclick = async () => {
             await sendAudioChunks(audioChunks);
             audioChunks = [];
         }
-        status.textContent = "Progress Status :: Recording stopped.";
+        status.textContent = "Progress Status :: Listening stopped.";
     };
 
     mediaRecorder.start(500); // Collect data every 500ms (adjust as needed)
-    status.textContent = "Progress Status :: Recording...";
     startBtn.disabled = true;
     stopBtn.disabled = false;
 };
@@ -57,7 +56,7 @@ stopBtn.onclick = () => {
 };
 
 async function sendAudioChunks(chunks) {
-    status.textContent = "Progress Status :: Started Listening...";
+    status.textContent = "Progress Status :: Listening...";
     const blob = new Blob(chunks, { type: 'audio/webm' }); // or 'audio/wav' depending on your backend
     const formData = new FormData();
     formData.append('file', blob, 'audio.webm');
